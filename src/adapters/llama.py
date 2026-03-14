@@ -1,7 +1,7 @@
 from dataclasses import asdict
 import json
 import os
-from groq import Groq
+from groq import Groq, omit
 from dotenv import load_dotenv
 
 from src.model.message import ChatMessage
@@ -10,11 +10,22 @@ load_dotenv()
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 
-def invoke_llama(messages: ChatMessage, temperature: float) -> dict:
+def invoke_llama(
+    messages: list[ChatMessage] | str,
+    temperature: float | None = None,
+    json_response: bool | None = None,
+) -> str:
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        messages=[asdict(message) for message in messages],
-        response_format={"type": "json_object"},
-        temperature=temperature,
+        messages=_convert_messages(messages),
+        response_format={"type": "json_object"} if json_response == True else omit,
+        temperature=temperature if temperature is not None else omit,
     )
-    return json.loads(response.choices[0].message.content)
+    return response.choices[0].message.content
+
+
+def _convert_messages(messages: list[ChatMessage] | str) -> list[any]:
+    if isinstance(messages, list):
+        return [asdict(message) for message in messages]
+    else:
+        return [{"role": "user", "content": messages}]
