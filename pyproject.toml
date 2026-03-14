@@ -4,4 +4,17 @@ version = "0.1.0"
 description = "An AI game based on the novel Alice in Wonderland"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "requests",
+    "langchain",
+    "langchain-classic",
+    "langchain-groq",
+    "langchain-community",
+    "faiss-cpu",
+    "langchain-huggingface",
+    "sentence-transformers",
+    "python-dotenv",
+    "google-genai",
+    "groq",
+    "pydantic",
+]
