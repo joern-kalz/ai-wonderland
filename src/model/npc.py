@@ -9,5 +9,5 @@ from src.model.message import ChatMessage
 class Npc:
     """Represents a non-player character"""
 
-    image: any
+    image: bytes
     chat_history: list[ChatMessage]

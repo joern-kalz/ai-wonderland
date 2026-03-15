@@ -5,15 +5,16 @@ from src.core.get_novel_excerpts import get_novel_excerpts
 
 
 def generate_image_description(npc: str) -> str:
-    excerpts = get_novel_excerpts(npc)
-    prompt = Template(_prompt_template).substitute(
-        npc=npc, excerpts="\n".join(excerpts)
-    )
+    query = f"Physical description of the location and surroundings where ${npc} is present."
+    excerpts = get_novel_excerpts(query)
+    template = Template(_prompt_template)
+    prompt = template.substitute(npc=npc, excerpts="\n".join(excerpts))
     return invoke_llama(prompt)
 
 
 _prompt_template = """
 Create a description of $npc and a suitable setting for a text-to-image LLM. 
+$npc must be stationary and not moving.
 The description must not mention any other character besides $npc.
 Respond only with the description and do not include an introductory sentence.
                         
