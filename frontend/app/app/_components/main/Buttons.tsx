@@ -1,37 +1,59 @@
+import { useState } from "react";
 import { sendTalk } from "@/libs/sendTalk";
 import { sendTravel } from "@/libs/sendTravel";
+import SpeechBubbleForm from "./SpeechBubbleForm";
 
 export interface ButtonsProps {
     sessionToken: string;
 }
 
 export default function Buttons({ sessionToken }: ButtonsProps) {
-    const handleTalk = () => {
-        // TODO: Replace with a dialog to get the message from the user
-        sendTalk({ sessionToken, message: "Hello" });
+    const [activeForm, setActiveForm] = useState<"talk" | "travel" | null>(null);
+
+    const handleTalkClick = () => {
+        setActiveForm(activeForm === "talk" ? null : "talk");
     };
 
-    const handleTravel = () => {
-        // TODO: Replace with a dialog to get the destination from the user
-        sendTravel({ sessionToken, destination: "the-shire" });
+    const handleTravelClick = () => {
+        setActiveForm(activeForm === "travel" ? null : "travel");
+    };
+
+    const handleTalkConfirm = (message: string) => {
+        sendTalk({ sessionToken, message });
+        setActiveForm(null);
+    };
+
+    const handleTravelConfirm = (destination: string) => {
+        sendTravel({ sessionToken, destination });
+        setActiveForm(null);
     };
 
     return (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4">
-            <button
-                onClick={handleTalk}
-                className="flex items-center justify-center w-32 h-12 bg-white opacity-80 hover:opacity-90 text-gray-700 font-bold rounded-lg"
-            >
-                <i className="fa-regular fa-comment mr-2"></i>
-                Talk
-            </button>
-            <button
-                onClick={handleTravel}
-                className="flex items-center justify-center w-32 h-12 bg-white opacity-80 hover:opacity-90 text-gray-700 font-bold rounded-lg"
-            >
-                <i className="fa-regular fa-map mr-2"></i>
-                Travel
-            </button>
+            <div className="relative">
+                <button
+                    onClick={handleTalkClick}
+                    className="flex items-center justify-center w-32 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-bold rounded-lg"
+                >
+                    <i className="fa-regular fa-comment mr-2"></i>
+                    Talk
+                </button>
+                {activeForm === "talk" && (
+                    <SpeechBubbleForm onConfirm={handleTalkConfirm} />
+                )}
+            </div>
+            <div className="relative">
+                <button
+                    onClick={handleTravelClick}
+                    className="flex items-center justify-center w-32 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-bold rounded-lg"
+                >
+                    <i className="fa-regular fa-map mr-2"></i>
+                    Travel
+                </button>
+                {activeForm === "travel" && (
+                    <SpeechBubbleForm onConfirm={handleTravelConfirm} />
+                )}
+            </div>
         </div>
     );
 }
