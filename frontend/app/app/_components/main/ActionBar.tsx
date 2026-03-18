@@ -2,11 +2,11 @@ import { useState } from "react";
 import Toggle from "./Toggle";
 import ActionForm from "./ActionForm";
 
-export interface ButtonsProps {
+export interface ActionBarProps {
     sessionToken: string;
 }
 
-export default function Buttons({ sessionToken }: ButtonsProps) {
+export default function ActionBar({ sessionToken }: ActionBarProps) {
     const [mode, setMode] = useState<'talk' | 'travel'>('talk');
 
     const handleTalkClick = () => {
