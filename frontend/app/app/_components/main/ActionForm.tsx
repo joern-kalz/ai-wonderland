@@ -14,13 +14,8 @@ export default function ActionForm({ mode, sessionToken, setNpcMessage }: Action
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if (!loading) {
-            inputRef.current?.focus();
-        }
-        if (mode === 'travel') {
-            setNpcMessage(null);
-        }
-    }, [mode, loading, setNpcMessage]);
+        inputRef.current?.focus();
+    }, [mode, loading]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
