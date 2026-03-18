@@ -4,9 +4,10 @@ import ActionForm from "./ActionForm";
 
 export interface ActionBarProps {
     sessionToken: string;
+    setNpcMessage: (message: string | null) => void;
 }
 
-export default function ActionBar({ sessionToken }: ActionBarProps) {
+export default function ActionBar({ sessionToken, setNpcMessage }: ActionBarProps) {
     const [mode, setMode] = useState<'talk' | 'travel'>('talk');
 
     const handleTalkClick = () => {
@@ -33,7 +34,7 @@ export default function ActionBar({ sessionToken }: ActionBarProps) {
     return (
         <div className="absolute bottom-0 flex items-center p-4 w-full">
             <Toggle choices={choices} />
-            <ActionForm mode={mode} sessionToken={sessionToken} />
+            <ActionForm mode={mode} sessionToken={sessionToken} setNpcMessage={setNpcMessage} />
         </div>
     );
 }

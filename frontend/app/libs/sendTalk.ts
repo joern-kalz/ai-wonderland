@@ -10,14 +10,17 @@ interface SendTalkResponse {
 export async function sendTalk(
     { sessionToken, message }: SendTalkRequest
 ): Promise<SendTalkResponse> {
-    const response = await fetch('https://picsum.photos/seed/picsum/1024/1024', {
-        method: 'POST',
-        body: JSON.stringify({ message }),
-        headers: {
-            'x-session-token': `${sessionToken}`,
-            'Content-Type': 'application/json'
-        }
-    });
+    // const response = await fetch('https://picsum.photos/seed/picsum/1024/1024', {
+    //     method: 'POST',
+    //     body: JSON.stringify({ message }),
+    //     headers: {
+    //         'x-session-token': `${sessionToken}`,
+    //         'Content-Type': 'application/json'
+    //     }
+    // });
 
-    return response.json();
+    // return response.json();
+
+    await new Promise(r => setTimeout(r, 2000));
+    return { message }
 }

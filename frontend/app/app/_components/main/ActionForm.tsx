@@ -5,28 +5,35 @@ import { sendTravel } from "@/libs/sendTravel";
 export interface ActionFormProps {
     mode: 'talk' | 'travel';
     sessionToken: string;
+    setNpcMessage: (message: string | null) => void;
 }
 
-export default function ActionForm({ mode, sessionToken }: ActionFormProps) {
+export default function ActionForm({ mode, sessionToken, setNpcMessage }: ActionFormProps) {
     const [inputValue, setInputValue] = useState('');
     const [loading, setLoading] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        inputRef.current?.focus();
-    }, [mode]);
+        if (!loading) {
+            inputRef.current?.focus();
+        }
+        if (mode === 'travel') {
+            setNpcMessage(null);
+        }
+    }, [mode, loading, setNpcMessage]);
 
-    const handleSubmit = async (e: React.SubmitEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         if (mode === 'talk') {
-            await sendTalk({ sessionToken, message: inputValue });
+            const { message } = await sendTalk({ sessionToken, message: inputValue });
+            setNpcMessage(message);
         } else {
             await sendTravel({ sessionToken, destination: inputValue });
+            setNpcMessage(null);
         }
         setInputValue('');
         setLoading(false);
-        inputRef.current?.focus();
     };
 
     const placeholder = mode === 'talk' ? "Type what you want to say..." : "Type the name of the character you want to travel to...";
