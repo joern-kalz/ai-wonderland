@@ -5,6 +5,7 @@ import SpeechBubble from "./SpeechBubble";
 import TravelError from "./TravelError";
 import { sendTalk } from "@/libs/sendTalk";
 import { sendTravel } from "@/libs/sendTravel";
+import LoadingSpinner from "./LoadingSpinner";
 
 export interface MainProps {
     sessionToken: string;
@@ -39,6 +40,7 @@ export default function Main({ sessionToken }: MainProps) {
             <TravelError message={travelError} />
             <SpeechBubble message={npcMessage} />
             <ActionBar onAction={onAction} loading={loading} />
+            {loading && <LoadingSpinner />}
         </div>
     )
 }
