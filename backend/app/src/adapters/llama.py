@@ -1,5 +1,4 @@
 from dataclasses import asdict
-import json
 import os
 from groq import Groq, omit
 from dotenv import load_dotenv
@@ -21,10 +20,10 @@ def invoke_llama(
         response_format={"type": "json_object"} if json_response == True else omit,
         temperature=temperature if temperature is not None else omit,
     )
-    return response.choices[0].message.content
+    return response.choices[0].message.content or ""
 
 
-def _convert_messages(messages: list[ChatMessage] | str) -> list[any]:
+def _convert_messages(messages: list[ChatMessage] | str) -> list:
     if isinstance(messages, list):
         return [asdict(message) for message in messages]
     else:

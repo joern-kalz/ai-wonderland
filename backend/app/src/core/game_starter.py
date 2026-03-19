@@ -1,18 +1,25 @@
 """Logic for starting a new game session."""
 
-import generate_overview
+import secrets
+
+from src.adapters.session_store import write_session
+from src.core.overview_generator import generate_overview
 from src.model.game_session import GameSession
 
 
-def start_game() -> GameSession:
+def start_game_and_return_session_token() -> str:
     """Starts a new game session."""
 
     overview = generate_overview()
 
-    return GameSession(
+    session = GameSession(
         crisis=overview.crisis,
         quests=overview.quests,
         actions_since_quest_start=0,
         current_npc=overview.current_npc,
         npcs_by_name={},
     )
+
+    sessionToken = secrets.token_urlsafe(32)
+    write_session(sessionToken, session)
+    return sessionToken
