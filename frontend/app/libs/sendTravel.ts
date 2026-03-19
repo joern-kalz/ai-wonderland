@@ -22,5 +22,5 @@ export async function sendTravel(
     // return response.json();
 
     await new Promise(r => setTimeout(r, 2000));
-    return { type: 'success' }
+    return { type: 'not_a_character_error' }
 }

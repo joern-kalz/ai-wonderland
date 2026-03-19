@@ -6,9 +6,10 @@ export interface ActionFormProps {
     mode: 'talk' | 'travel';
     sessionToken: string;
     setNpcMessage: (message: string | null) => void;
+    setTravelError: (message: string | null) => void;
 }
 
-export default function ActionForm({ mode, sessionToken, setNpcMessage }: ActionFormProps) {
+export default function ActionForm({ mode, sessionToken, setNpcMessage, setTravelError }: ActionFormProps) {
     const [inputValue, setInputValue] = useState('');
     const [loading, setLoading] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -17,15 +18,19 @@ export default function ActionForm({ mode, sessionToken, setNpcMessage }: Action
         inputRef.current?.focus();
     }, [mode, loading]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEtagt) => {
         e.preventDefault();
         setNpcMessage(null);
+        setTravelError(null);
         setLoading(true);
         if (mode === 'talk') {
             const { message } = await sendTalk({ sessionToken, message: inputValue });
             setNpcMessage(message);
         } else {
-            await sendTravel({ sessionToken, destination: inputValue });
+            const response = await sendTravel({ sessionToken, destination: inputValue });
+            if (response.type === 'not_a_character_error') {
+                setTravelError(`"${inputValue}" is not the name of a character. Please enter a character name`);
+            }
         }
         setInputValue('');
         setLoading(false);
