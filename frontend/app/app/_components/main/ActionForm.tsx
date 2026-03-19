@@ -19,13 +19,13 @@ export default function ActionForm({ mode, sessionToken, setNpcMessage }: Action
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setNpcMessage(null);
         setLoading(true);
         if (mode === 'talk') {
             const { message } = await sendTalk({ sessionToken, message: inputValue });
             setNpcMessage(message);
         } else {
             await sendTravel({ sessionToken, destination: inputValue });
-            setNpcMessage(null);
         }
         setInputValue('');
         setLoading(false);
