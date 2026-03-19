@@ -1,39 +1,23 @@
 import { useState, useRef, useEffect } from "react";
-import { sendTalk } from "@/libs/sendTalk";
-import { sendTravel } from "@/libs/sendTravel";
 
 export interface ActionFormProps {
     mode: 'talk' | 'travel';
-    sessionToken: string;
-    setNpcMessage: (message: string | null) => void;
-    setTravelError: (message: string | null) => void;
+    onAction: (mode: 'talk' | 'travel', inputValue: string) => Promise<void>;
+    loading: boolean;
 }
 
-export default function ActionForm({ mode, sessionToken, setNpcMessage, setTravelError }: ActionFormProps) {
+export default function ActionForm({ mode, onAction, loading }: ActionFormProps) {
     const [inputValue, setInputValue] = useState('');
-    const [loading, setLoading] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         inputRef.current?.focus();
     }, [mode, loading]);
 
-    const handleSubmit = async (e: React.FormEtagt) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setNpcMessage(null);
-        setTravelError(null);
-        setLoading(true);
-        if (mode === 'talk') {
-            const { message } = await sendTalk({ sessionToken, message: inputValue });
-            setNpcMessage(message);
-        } else {
-            const response = await sendTravel({ sessionToken, destination: inputValue });
-            if (response.type === 'not_a_character_error') {
-                setTravelError(`"${inputValue}" is not the name of a character. Please enter a character name`);
-            }
-        }
+        await onAction(mode, inputValue);
         setInputValue('');
-        setLoading(false);
     };
 
     const placeholder = mode === 'talk' ? "Type what you want to say..." : "Type the name of the character you want to travel to...";

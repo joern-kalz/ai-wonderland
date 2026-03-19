@@ -3,12 +3,11 @@ import Toggle from "./Toggle";
 import ActionForm from "./ActionForm";
 
 export interface ActionBarProps {
-    sessionToken: string;
-    setNpcMessage: (message: string | null) => void;
-    setTravelError: (message: string | null) => void;
+    onAction: (mode: 'talk' | 'travel', inputValue: string) => Promise<void>;
+    loading: boolean;
 }
 
-export default function ActionBar({ sessionToken, setNpcMessage, setTravelError }: ActionBarProps) {
+export default function ActionBar({ onAction, loading }: ActionBarProps) {
     const [mode, setMode] = useState<'talk' | 'travel'>('talk');
 
     const handleTalkClick = () => {
@@ -35,7 +34,7 @@ export default function ActionBar({ sessionToken, setNpcMessage, setTravelError 
     return (
         <div className="absolute bottom-0 flex items-center p-4 w-full">
             <Toggle choices={choices} />
-            <ActionForm mode={mode} sessionToken={sessionToken} setNpcMessage={setNpcMessage} setTravelError={setTravelError} />
+            <ActionForm mode={mode} onAction={onAction} loading={loading} />
         </div>
     );
 }
