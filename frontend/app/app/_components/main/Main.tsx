@@ -14,6 +14,7 @@ export default function Main({ sessionToken }: MainProps) {
     const [npcMessage, setNpcMessage] = useState<string | null>(null);
     const [travelError, setTravelError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [travelId, setTravelId] = useState(0);
 
     const onAction = async (mode: 'talk' | 'travel', inputValue: string) => {
         setNpcMessage(null);
@@ -27,13 +28,14 @@ export default function Main({ sessionToken }: MainProps) {
             if (response.type === 'not_a_character_error') {
                 setTravelError(`"${inputValue}" is not the name of a character. Please enter a character name`);
             }
+            setTravelId(travelId + 1);
         }
         setLoading(false);
     }
 
     return (
         <div className="relative aspect-square max-h-full max-w-full">
-            <NpcImage sessionToken={sessionToken} />
+            <NpcImage sessionToken={sessionToken} travelId={travelId} />
             <TravelError message={travelError} />
             <SpeechBubble message={npcMessage} />
             <ActionBar onAction={onAction} loading={loading} />
