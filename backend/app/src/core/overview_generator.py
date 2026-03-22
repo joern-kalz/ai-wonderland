@@ -17,9 +17,6 @@ def generate_overview() -> GameOverview:
         messages=messages,
     )
     messages += [response]
-
-    print("Raw response from LLM:")
-    print(messages)
     response = _Response.model_validate(json.loads(messages[-1].content))
 
     return GameOverview(

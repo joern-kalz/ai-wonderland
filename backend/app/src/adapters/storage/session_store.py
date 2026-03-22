@@ -27,7 +27,7 @@ def read_session(session_token: str) -> GameSession | None:
         session_dict = json.load(f)
 
     for npc_name, npc_dict in session_dict["npcs_by_name"].items():
-        image_path = os.path.join(_cache_dir, f"{session_token}_{npc_name}")
+        image_path = os.path.join(_cache_dir, f"{session_token}_{npc_name}.png")
         if os.path.exists(image_path):
             with open(image_path, "rb") as f:
                 npc_dict["image"] = f.read()
@@ -53,7 +53,9 @@ def write_session(session_token: str, session: GameSession) -> None:
 
     for npc_name, npc_dict in session_dict["npcs_by_name"].items():
         image = npc_dict.pop("image")
-        with open(os.path.join(_cache_dir, f"{session_token}_{npc_name}"), "wb") as f:
+        with open(
+            os.path.join(_cache_dir, f"{session_token}_{npc_name}.png"), "wb"
+        ) as f:
             f.write(image)
 
     with open(os.path.join(_cache_dir, f"{session_token}.json"), "w") as f:
