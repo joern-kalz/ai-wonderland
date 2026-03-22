@@ -7,7 +7,7 @@ from openai import OpenAI
 
 def generate_png_image(prompt: str) -> bytes:
     result = _client.images.generate(
-        model="gpt-image-1-mini", prompt=prompt, quality="low"
+        model="gpt-image-1-mini", prompt=prompt, quality="low", size="1024x1024"
     )
 
     if result.data is None or len(result.data) == 0 or not result.data[0].b64_json:

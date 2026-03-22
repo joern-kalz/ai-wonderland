@@ -6,8 +6,8 @@
     ],
     "[python]": {
         "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit",
-            "source.unusedImports": "explicit",
+            "source.organizeImports": "always",
+            "source.unusedImports": "always",
         }
     }
 }
