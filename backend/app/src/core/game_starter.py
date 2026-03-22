@@ -2,7 +2,7 @@
 
 import secrets
 
-from src.adapters.session_store import write_session
+from src.adapters.storage.session_store import write_session
 from src.core.overview_generator import generate_overview
 from src.model.game_session import GameSession
 
@@ -18,6 +18,7 @@ def start_game_and_return_session_token() -> str:
         actions_since_quest_start=0,
         current_npc=overview.current_npc,
         npcs_by_name={},
+        log=overview.log,
     )
 
     sessionToken = secrets.token_urlsafe(32)

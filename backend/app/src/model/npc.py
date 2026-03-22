@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from src.model.message import ChatMessage
+from src.model.chat_message import ChatMessage
 
 
 @dataclass
