@@ -1,8 +1,8 @@
 """Retrieval of excerpts from a text based on their similarity to a question"""
 
 from langchain_community.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 
 
 def create_retriever(
@@ -18,7 +18,7 @@ def create_retriever(
     )
     _chunk_stores[retriever_name] = _text_splitter.create_documents([text])
 
-    _embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en-v1.5")
+    _embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
 
     _vector_stores[retriever_name] = FAISS.from_documents(
         _chunk_stores[retriever_name], _embeddings

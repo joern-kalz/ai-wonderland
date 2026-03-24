@@ -40,7 +40,9 @@ def read_session(session_token: str) -> GameSession | None:
 
         session_dict["npcs_by_name"][npc_name] = Npc(**npc_dict)
 
-    session_dict["log"] = [deserialize_chat_message(msg) for msg in session_dict["log"]]
+    session_dict["log"] = [
+        [deserialize_chat_message(msg) for msg in msgs] for msgs in session_dict["log"]
+    ]
 
     return GameSession(**session_dict)
 

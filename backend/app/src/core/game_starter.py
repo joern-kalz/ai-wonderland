@@ -26,7 +26,7 @@ def start_game_and_return_session_token() -> str:
                 chat_history=[],
             )
         },
-        log=overview.log,
+        log=[overview.log],
     )
 
     sessionToken = secrets.token_urlsafe(32)

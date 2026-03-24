@@ -15,4 +15,4 @@ class GameSession:
     actions_since_quest_start: int
     npcs_by_name: dict[str, Npc]
     current_npc: str
-    log: list[ChatMessage]
+    log: list[list[ChatMessage]]
