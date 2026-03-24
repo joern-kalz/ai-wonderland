@@ -4,7 +4,7 @@ import secrets
 
 from src.adapters.ai.image_model import generate_png_image
 from src.adapters.storage.session_store import write_session
-from src.core.overview_generator import generate_overview
+from src.core.use_cases.start.overview_generator import generate_overview
 from src.model.game_session import GameSession
 from src.model.npc import Npc
 

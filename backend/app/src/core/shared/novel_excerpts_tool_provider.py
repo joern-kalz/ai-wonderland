@@ -1,6 +1,6 @@
 """List of tools for retrieving novel excerpts."""
 
-from src.core.novel_excerpts_retriever import (
+from src.core.shared.novel_excerpts_retriever import (
     get_novel_excerpts_for_keyword,
     get_novel_excerpts_for_question,
 )

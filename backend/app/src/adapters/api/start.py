@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
-from src.core.game_starter import start_game_and_return_session_token
+from src.core.use_cases.start.start_use_case import start_game_and_return_session_token
 
 start_router = APIRouter()
 

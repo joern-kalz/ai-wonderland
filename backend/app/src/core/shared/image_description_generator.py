@@ -1,8 +1,8 @@
 from string import Template
 
-from src.core.ai_agent import invoke_agent
+from src.core.shared.ai_agent import invoke_agent
 from src.model.chat_message import ChatMessage, UserChatMessage
-from src.core.novel_excerpts_tool_provider import novel_excerpts_tools
+from src.core.shared.novel_excerpts_tool_provider import novel_excerpts_tools
 
 
 def generate_image_description(npc: str) -> list[ChatMessage]:

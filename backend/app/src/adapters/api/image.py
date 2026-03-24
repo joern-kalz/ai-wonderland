@@ -1,7 +1,7 @@
 """API endpoint for starting a new game."""
 
 from fastapi import APIRouter, Response
-from src.core.image_provider import provide_current_npc_image
+from src.core.use_cases.image.image_use_case import provide_current_npc_image
 from typing import Annotated
 from fastapi import APIRouter, Header
 
