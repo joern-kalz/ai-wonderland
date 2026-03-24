@@ -18,12 +18,12 @@ def generate_response(session: GameSession) -> NpcResponse:
     if npc == None:
         raise ValueError("Invalid session state: current NPC not found")
 
-    attitude = _get_attitude(session)
     system_prompt = Template(_conversation_prompt).substitute(
         name=session.current_npc,
         task=session.quests[0],
-        attitude=attitude,
+        attitude=_get_attitude(session),
         crisis=session.crisis,
+        following_tasks=_get_following_tasks(session),
     )
     system_message = SystemChatMessage(role="system", content=system_prompt)
 
@@ -51,6 +51,18 @@ def _get_attitude(session: GameSession) -> str:
         )
 
 
+def _get_following_tasks(session: GameSession) -> str:
+    if len(session.quests) <= 1:
+        return "Accomplishing this task will resolve the crisis."
+    else:
+        tasks = "\n".join([f"- {quest}" for quest in session.quests[1:]])
+        return (
+            "When this task is accomplished, your conversation partner "
+            + "also has to succeed in the following tasks to resolve the crisis.\n\n"
+            + f"<following_tasks>\n${tasks}\n</following_tasks>\n"
+        )
+
+
 _conversation_prompt = """
 You are $name. You are in the world of the novel "Alice's Adventures in Wonderland" by Lewis Carroll.
 
@@ -62,11 +74,13 @@ $crisis
 
 Your conversation partner currently has the following task: 
 
-<task>
-$task
-</task>
+<current_task>
+$current_task
+</current_task>
 
 $attitude
+
+$following_tasks
 
 Always respond with a single sentence.
 
