@@ -21,12 +21,12 @@ def travel(session_token: str, npc: str) -> TravelResult:
     if mapping.npc is None:
         write_session(session_token, session)
         return TravelResult(result="not_a_valid_character")
-    else:
+
+    if mapping.npc not in session.npcs_by_name:
         npc_image = generate_npc_image(mapping.npc)
-
-        session.log.append(npc_image.log)
         session.npcs_by_name[mapping.npc] = Npc(image=npc_image.image, chat_history=[])
-        session.current_npc = mapping.npc
+        session.log.append(npc_image.log)
 
-        write_session(session_token, session)
-        return TravelResult(result="success")
+    session.current_npc = mapping.npc
+    write_session(session_token, session)
+    return TravelResult(result="success")
