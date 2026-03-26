@@ -1,5 +1,8 @@
 """Retrieval of excerpts from a text based on their similarity to a question"""
 
+import os
+from pathlib import Path
+
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
@@ -18,11 +21,22 @@ def create_retriever(
     )
     _chunk_stores[retriever_name] = _text_splitter.create_documents([text])
 
-    _embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
+    embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
 
-    _vector_stores[retriever_name] = FAISS.from_documents(
-        _chunk_stores[retriever_name], _embeddings
-    )
+    cache = os.path.join(_cache_dir, f"{retriever_name}")
+    Path(cache).parent.mkdir(parents=True, exist_ok=True)
+
+    if os.path.exists(cache):
+        _vector_stores[retriever_name] = FAISS.load_local(
+            cache, embeddings, allow_dangerous_deserialization=True
+        )
+    else:
+        print("Creating vector store. This can take a few seconds...")
+        _vector_stores[retriever_name] = FAISS.from_documents(
+            _chunk_stores[retriever_name], embeddings
+        )
+        _vector_stores[retriever_name].save_local(cache)
+        print("Vector store created.")
 
 
 def retrieve_by_keyword(
@@ -43,3 +57,6 @@ def retrieve_by_question(retriever_name: str, question: str, limit: int) -> list
 
 _chunk_stores: dict[str, list] = {}
 _vector_stores: dict[str, FAISS] = {}
+
+_module_dir = os.path.dirname(__file__)
+_cache_dir = os.path.join(_module_dir, ".cache")
