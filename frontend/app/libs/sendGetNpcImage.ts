@@ -4,7 +4,6 @@ export async function sendGetNpcImage(sessionToken: string): Promise<Blob> {
     const response = await fetch(`${API_URL}/image`, {
         headers: {
             'x-session-token': `${sessionToken}`,
-            "Content-Type": "application/json"
         }
     });
 
