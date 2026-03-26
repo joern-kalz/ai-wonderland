@@ -65,7 +65,7 @@ def _get_pending_tasks(session: GameSession) -> str:
         return (
             "When this task is accomplished, your conversation partner "
             + "also has to succeed in the following tasks to resolve the crisis.\n\n"
-            + f"<pending_tasks>\n${pending_list_str}\n</pending_tasks>\n"
+            + f"<pending_tasks>\n{pending_list_str}\n</pending_tasks>\n"
         )
 
 
@@ -76,7 +76,7 @@ def _get_completed_tasks(session: GameSession) -> str:
         accomplished_list_str = "\n".join(accomplished_list)
         return (
             "So far, your conversation partner has already accomplished the following tasks:\n\n"
-            + f"<accomplished_tasks>\n${accomplished_list_str}\n</accomplished_tasks>\n"
+            + f"<accomplished_tasks>\n{accomplished_list_str}\n</accomplished_tasks>\n"
         )
     else:
         return ""

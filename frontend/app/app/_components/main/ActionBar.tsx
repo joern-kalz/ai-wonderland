@@ -1,15 +1,14 @@
-import { useState } from "react";
 import Toggle from "./Toggle";
 import ActionForm from "./ActionForm";
 
 export interface ActionBarProps {
+    mode: 'talk' | 'travel';
+    setMode: (mode: 'talk' | 'travel') => void;
     onAction: (mode: 'talk' | 'travel', inputValue: string) => Promise<void>;
     loading: boolean;
 }
 
-export default function ActionBar({ onAction, loading }: ActionBarProps) {
-    const [mode, setMode] = useState<'talk' | 'travel'>('talk');
-
+export default function ActionBar({ mode, setMode, onAction, loading }: ActionBarProps) {
     const handleTalkClick = () => {
         setMode('talk');
     };

@@ -16,20 +16,23 @@ export default function Main({ sessionToken }: MainProps) {
     const [travelError, setTravelError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [travelId, setTravelId] = useState(0);
+    const [mode, setMode] = useState<'talk' | 'travel'>('talk');
 
-    const onAction = async (mode: 'talk' | 'travel', inputValue: string) => {
+    const onAction = async (actionMode: 'talk' | 'travel', inputValue: string) => {
         setNpcMessage(null);
         setTravelError(null);
         setLoading(true);
-        if (mode === 'talk') {
+        if (actionMode === 'talk') {
             const { message } = await sendTalk({ sessionToken, message: inputValue });
             setNpcMessage(message);
         } else {
             const response = await sendTravel({ sessionToken, destination: inputValue });
             if (response.type === 'not_a_character_error') {
                 setTravelError(`"${inputValue}" is not the name of a character. Please enter a character name`);
+            } else {
+                setMode('talk');
             }
-            setTravelId(travelId + 1);
+            setTravelId((prev) => prev + 1);
         }
         setLoading(false);
     }
@@ -39,7 +42,7 @@ export default function Main({ sessionToken }: MainProps) {
             <NpcImage sessionToken={sessionToken} travelId={travelId} />
             <TravelError message={travelError} />
             <SpeechBubble message={npcMessage} />
-            <ActionBar onAction={onAction} loading={loading} />
+            <ActionBar mode={mode} setMode={setMode} onAction={onAction} loading={loading} />
             {loading && <LoadingSpinner />}
         </div>
     )

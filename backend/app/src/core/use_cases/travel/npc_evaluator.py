@@ -23,7 +23,7 @@ def map_npc(session: GameSession, npc_name: str) -> MappingResult:
     if not all(c.isalpha() or c in " -'" for c in npc_name):
         return MappingResult(npc=None, log=[])
 
-    known_characters = [f"- ${c}" for c in session.npcs_by_name.keys()]
+    known_characters = [f"- {c}" for c in session.npcs_by_name.keys()]
     prompt = Template(_prompt).substitute(
         input=npc_name, known_characters="\n".join(known_characters)
     )

@@ -12,7 +12,7 @@ interface SendTravelResponse {
 export async function sendTravel(
     { sessionToken, destination }: SendTravelRequest
 ): Promise<SendTravelResponse> {
-    const response = await fetch(`${API_URL}/talk`, {
+    const response = await fetch(`${API_URL}/travel`, {
         method: 'POST',
         body: JSON.stringify({ npc: destination }),
         headers: {
