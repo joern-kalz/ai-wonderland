@@ -1,42 +1,25 @@
 """List of tools for retrieving novel excerpts."""
 
 from src.core.shared.novel_excerpts_retriever import (
-    get_novel_excerpts_for_keyword,
     get_novel_excerpts_for_question,
 )
 from src.model.tool import Tool, ToolArgument, ToolSpec
 
 
-def _get_novel_excerpts_for_keyword(question: str, limit: int) -> str:
-    excerpts = get_novel_excerpts_for_keyword(keyword=question, limit=limit)
-    return _join_excerpts(excerpts)
-
-
-def _get_novel_excerpts_for_question(question: str, limit: int) -> str:
-    excerpts = get_novel_excerpts_for_question(question=question, limit=limit)
+def _get_novel_excerpts_for_question(question: str) -> str:
+    excerpts = get_novel_excerpts_for_question(question=question, limit=5)
     return _join_excerpts(excerpts)
 
 
 novel_excerpts_tools: list[Tool] = [
     Tool(
         spec=ToolSpec(
-            name="get_novel_excerpts_for_keyword",
-            description="Retrieves excerpts from the novel Alice's Adventures in Wonderland for a keyword.",
+            name="get_novel_excerpts",
+            description="Retrieves excerpts from the novel Alice's Adventures in Wonderland. Use this tool when a new topic comes up in the conversation and you want to retrieve information about it from the novel.",
             arguments=[
                 ToolArgument(
-                    name="keyword", description="The keyword to retrieve excerpts for"
-                )
-            ],
-        ),
-        function=_get_novel_excerpts_for_keyword,
-    ),
-    Tool(
-        spec=ToolSpec(
-            name="get_novel_excerpts_for_question",
-            description="Retrieves excerpts from the novel Alice's Adventures in Wonderland related to a question.",
-            arguments=[
-                ToolArgument(
-                    name="question", description="The question to retrieve excerpts for"
+                    name="question",
+                    description="The question to retrieve background information for",
                 )
             ],
         ),
