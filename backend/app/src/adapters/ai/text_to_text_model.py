@@ -95,8 +95,8 @@ def _map_tool_spec_from_model(tool: ToolSpec) -> dict:
             "parameters": {
                 "type": "object",
                 "properties": properties,
+                "required": [arg.name for arg in tool.arguments],
             },
-            "required": [arg.name for arg in tool.arguments],
         },
     }
 
