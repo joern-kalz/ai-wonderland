@@ -1,3 +1,5 @@
+import { API_URL } from "./config";
+
 interface SendTalkRequest {
     sessionToken: string;
     message: string;
@@ -5,22 +7,24 @@ interface SendTalkRequest {
 
 interface SendTalkResponse {
     message: string;
+    game_end: boolean;
 }
 
 export async function sendTalk(
     { sessionToken, message }: SendTalkRequest
 ): Promise<SendTalkResponse> {
-    // const response = await fetch('https://picsum.photos/seed/picsum/1024/1024', {
-    //     method: 'POST',
-    //     body: JSON.stringify({ message }),
-    //     headers: {
-    //         'x-session-token': `${sessionToken}`,
-    //         'Content-Type': 'application/json'
-    //     }
-    // });
+    const response = await fetch(`${API_URL}/talk`, {
+        method: 'POST',
+        body: JSON.stringify({ message }),
+        headers: {
+            'x-session-token': `${sessionToken}`,
+            'Content-Type': 'application/json'
+        }
+    });
 
-    // return response.json();
+    if (!response.ok) {
+        throw new Error(`Failed to talk: ${response.statusText}`);
+    }
 
-    await new Promise(r => setTimeout(r, 2000));
-    return { message }
+    return response.json();
 }
