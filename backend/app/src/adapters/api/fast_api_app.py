@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from .start import start_router
 from .image import image_router
 from .talk import talk_router
+from .travel import travel_router
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -15,6 +16,7 @@ def create_app() -> FastAPI:
     app.include_router(start_router)
     app.include_router(image_router)
     app.include_router(talk_router)
+    app.include_router(travel_router)
     return app
 
 

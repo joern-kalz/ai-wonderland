@@ -21,9 +21,6 @@ class TravelRequest(BaseModel):
     responses={
         400: {
             "description": "Not a valid character",
-            "content": {
-                "application/json": {"example": {"error": "not_a_valid_character"}}
-            },
         }
     },
 )
