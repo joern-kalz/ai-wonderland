@@ -31,11 +31,12 @@ def talk(session_token: str, message: str) -> TalkResult:
     session.log.append(evaluation.log)
 
     if evaluation.success:
-        session.quests.pop(0)
+        session.current_quest += 1
         session.actions_since_quest_start = 0
 
     write_session(session_token, session)
 
     return TalkResult(
-        message=response.message.content, game_end=len(session.quests) == 0
+        message=response.message.content,
+        game_end=session.current_quest == len(session.quests),
     )

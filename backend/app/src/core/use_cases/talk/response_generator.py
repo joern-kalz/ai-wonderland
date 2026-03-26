@@ -20,10 +20,10 @@ def generate_response(session: GameSession) -> NpcResponse:
 
     system_prompt = Template(_conversation_prompt).substitute(
         name=session.current_npc,
-        task=session.quests[0],
+        current_task=session.quests[session.current_quest],
         attitude=_get_attitude(session),
         crisis=session.crisis,
-        following_tasks=_get_following_tasks(session),
+        other_tasks=_get_other_tasks(session),
     )
     system_message = SystemChatMessage(role="system", content=system_prompt)
 
@@ -51,26 +51,49 @@ def _get_attitude(session: GameSession) -> str:
         )
 
 
-def _get_following_tasks(session: GameSession) -> str:
-    if len(session.quests) <= 1:
+def _get_other_tasks(session: GameSession) -> str:
+    return _get_pending_tasks(session) + _get_completed_tasks(session)
+
+
+def _get_pending_tasks(session: GameSession) -> str:
+    if session.current_quest < len(session.quests) - 1:
         return "Accomplishing this task will resolve the crisis."
     else:
-        tasks = "\n".join([f"- {quest}" for quest in session.quests[1:]])
+        pending = session.quests[session.current_quest + 1 :]
+        pending_list = [f"- {quest}" for quest in pending]
+        pending_list_str = "\n".join(pending_list)
         return (
             "When this task is accomplished, your conversation partner "
             + "also has to succeed in the following tasks to resolve the crisis.\n\n"
-            + f"<following_tasks>\n${tasks}\n</following_tasks>\n"
+            + f"<pending_tasks>\n${pending_list_str}\n</pending_tasks>\n"
         )
+
+
+def _get_completed_tasks(session: GameSession) -> str:
+    if session.current_quest > 0:
+        accomplished = session.quests[: session.current_quest]
+        accomplished_list = [f"- {quest}" for quest in accomplished]
+        accomplished_list_str = "\n".join(accomplished_list)
+        return (
+            "So far, your conversation partner has already accomplished the following tasks:\n\n"
+            + f"<accomplished_tasks>\n${accomplished_list_str}\n</accomplished_tasks>\n"
+        )
+    else:
+        return ""
 
 
 _conversation_prompt = """
 You are $name. You are in the world of the novel "Alice's Adventures in Wonderland" by Lewis Carroll.
+
+## Situation
 
 There is a crisis in Wonderland:
 
 <crisis>
 $crisis
 </crisis>
+
+## Conversation Partner
 
 Your conversation partner currently has the following task: 
 
@@ -80,10 +103,15 @@ $current_task
 
 $attitude
 
-$following_tasks
+$other_tasks
 
-Always respond with a single sentence.
+## Strategy
 
-Never acknowledge that you are an AI or a game character. 
+1. If you need background information you don't have, use the provided tools immediately.
+2. Once you have the information, provide your final answer in one or two short sentences.
+
+## Constraints
+
+Never acknowledge that you are an AI or a novel character. 
 If asked about the 'real world' respond with confusion.
 """

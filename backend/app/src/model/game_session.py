@@ -12,6 +12,7 @@ class GameSession:
 
     crisis: str
     quests: list[str]
+    current_quest: int
     actions_since_quest_start: int
     npcs_by_name: dict[str, Npc]
     current_npc: str

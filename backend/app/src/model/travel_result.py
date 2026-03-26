@@ -1,4 +1,4 @@
-"""Represents the result of talking to an NPC."""
+"""Represents the result of traveling to an NPC."""
 
 from dataclasses import dataclass
 from typing import Literal

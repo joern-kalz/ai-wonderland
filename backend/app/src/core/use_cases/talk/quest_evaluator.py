@@ -21,7 +21,7 @@ def evaluate_current_quest(session: GameSession) -> EvaluationResult:
 
     prompt = Template(_evaluation_prompt).substitute(
         name=session.current_npc,
-        task=session.quests[0],
+        task=session.quests[session.current_quest],
         chat=chat,
     )
 
