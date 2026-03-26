@@ -3,6 +3,7 @@ import NpcImage from "./NpcImage";
 import ActionBar from "./ActionBar";
 import SpeechBubble from "./SpeechBubble";
 import TravelError from "./TravelError";
+import EndOverlay from "./EndOverlay";
 import { sendTalk } from "@/libs/sendTalk";
 import { sendTravel } from "@/libs/sendTravel";
 import LoadingSpinner from "./LoadingSpinner";
@@ -17,14 +18,18 @@ export default function Main({ sessionToken }: MainProps) {
     const [loading, setLoading] = useState(false);
     const [travelId, setTravelId] = useState(0);
     const [mode, setMode] = useState<'talk' | 'travel'>('talk');
+    const [gameEnd, setGameEnd] = useState(false);
 
     const onAction = async (actionMode: 'talk' | 'travel', inputValue: string) => {
         setNpcMessage(null);
         setTravelError(null);
         setLoading(true);
         if (actionMode === 'talk') {
-            const { message } = await sendTalk({ sessionToken, message: inputValue });
+            const { message, game_end } = await sendTalk({ sessionToken, message: inputValue });
             setNpcMessage(message);
+            if (game_end) {
+                setGameEnd(true);
+            }
         } else {
             const response = await sendTravel({ sessionToken, destination: inputValue });
             if (response.type === 'not_a_character_error') {
@@ -44,6 +49,7 @@ export default function Main({ sessionToken }: MainProps) {
             <SpeechBubble message={npcMessage} />
             <ActionBar mode={mode} setMode={setMode} onAction={onAction} loading={loading} />
             {loading && <LoadingSpinner />}
+            {gameEnd && <EndOverlay />}
         </div>
     )
 }

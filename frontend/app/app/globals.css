@@ -3,3 +3,17 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes fade-in-end {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.8;
+  }
+}
+
+.end-overlay {
+  animation: fade-in-end 15s forwards;
+}
