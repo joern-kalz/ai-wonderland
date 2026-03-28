@@ -4,6 +4,10 @@ from dotenv import load_dotenv
 
 from src.model.chat_message import AssistantChatMessage, ChatMessage, ToolCall
 from src.model.tool import ToolSpec
+from groq import BadRequestError
+import re
+import random
+import string
 
 load_dotenv()
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
@@ -16,25 +20,45 @@ def invoke_text_to_text_model(
     allow_tool_calls: bool = True,
     json_response: bool = False,
 ) -> AssistantChatMessage:
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=_map_messages_from_model(messages),
-        tools=(
-            _map_tool_specs_from_model(tool_specs) if tool_specs is not None else omit
-        ),
-        temperature=temperature if temperature is not None else omit,
-        tool_choice="none" if allow_tool_calls == False else omit,
-        response_format={"type": "json_object"} if json_response == True else omit,
-    )
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=_map_messages_from_model(messages),
+            tools=(
+                _map_tool_specs_from_model(tool_specs)
+                if tool_specs is not None
+                else omit
+            ),
+            temperature=temperature if temperature is not None else omit,
+            tool_choice="none" if allow_tool_calls == False else omit,
+            response_format={"type": "json_object"} if json_response == True else omit,
+        )
 
-    message = response.choices[0].message
-    content = message.content or ""
-    tool_calls = (
-        _map_tool_calls_to_model(message.tool_calls) if message.tool_calls else []
-    )
+        message = response.choices[0].message
+        content = message.content or ""
+        tool_calls = (
+            _map_tool_calls_to_model(message.tool_calls) if message.tool_calls else []
+        )
+    except BadRequestError as e:
+        match = re.search(r"<function\s*=\s*(\w+)\s*(\{[^}]+\})", e.message)
+
+        if not match:
+            raise
+
+        print("Model attempted to call a tool but there was an error: ", e.message)
+        content = ""
+        tool_calls = [_create_tool_call(match.group(1), match.group(2))]
 
     return AssistantChatMessage(
         role="assistant", content=content, tool_calls=tool_calls
+    )
+
+
+def _create_tool_call(name: str, arguments: str) -> ToolCall:
+    return ToolCall(
+        id="".join(random.choices(string.ascii_lowercase + string.digits, k=9)),
+        name=name,
+        arguments=arguments.replace("\\'", "'"),
     )
 
 

@@ -1,8 +1,4 @@
-import random
-import re
-import string
-
-from groq import BadRequestError
+"""This module implements the AI agent loop, which allows an AI assistant to call tools and use their results in a multi-turn conversation."""
 
 from src.model.chat_message import (
     ChatMessage,
@@ -10,7 +6,6 @@ from src.model.chat_message import (
     ToolCall,
     ToolChatMessage,
     UserChatMessage,
-    AssistantChatMessage,
 )
 from src.model.tool import Tool
 from src.adapters.ai.text_to_text_model import invoke_text_to_text_model
@@ -54,33 +49,11 @@ def invoke_agent(
     for iteration in range(max_iterations):
         allow_tool_calls = iteration < max_iterations - 1
 
-        try:
-            assistant_message = invoke_text_to_text_model(
-                messages=new_messages,
-                tool_specs=tool_specs,
-                allow_tool_calls=allow_tool_calls,
-            )
-        except BadRequestError as e:
-            match = re.search(r"<function\s*=\s*(\w+)\s*(\{[^}]+\})", e.message)
-
-            if not match:
-                raise
-
-            print("Model attempted to call a tool but there was an error: ", e.message)
-
-            assistant_message = AssistantChatMessage(
-                role="assistant",
-                content="",
-                tool_calls=[
-                    ToolCall(
-                        id="".join(
-                            random.choices(string.ascii_lowercase + string.digits, k=9)
-                        ),
-                        name=match.group(1),
-                        arguments=match.group(2).replace("\\'", "'"),
-                    )
-                ],
-            )
+        assistant_message = invoke_text_to_text_model(
+            messages=new_messages,
+            tool_specs=tool_specs,
+            allow_tool_calls=allow_tool_calls,
+        )
 
         new_messages += [assistant_message]
 
