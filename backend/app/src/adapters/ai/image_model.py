@@ -4,8 +4,19 @@ import base64
 
 from openai import OpenAI
 
+_client: OpenAI | None = None
+
+
+def initialize_image_model() -> None:
+    """Initialize the image generation client."""
+    global _client
+    _client = OpenAI()
+
 
 def generate_png_image(prompt: str) -> bytes:
+    if _client is None:
+        raise RuntimeError("Call initialize_image_model() before use.")
+
     result = _client.images.generate(
         model="gpt-image-1-mini", prompt=prompt, quality="low", size="1024x1024"
     )
@@ -15,6 +26,3 @@ def generate_png_image(prompt: str) -> bytes:
 
     image_base64 = result.data[0].b64_json
     return base64.b64decode(image_base64)
-
-
-_client = OpenAI()
