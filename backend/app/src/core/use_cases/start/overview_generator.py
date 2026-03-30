@@ -4,7 +4,10 @@ import json
 
 from pydantic import BaseModel
 
-from src.adapters.ai.text_to_text_model import invoke_text_to_text_model
+from src.adapters.ai.text_to_text_model import (
+    initialize_text_to_text_model,
+    invoke_text_to_text_model,
+)
 from src.model.game_overview import GameOverview
 from src.model.chat_message import ChatMessage, UserChatMessage
 
@@ -63,4 +66,5 @@ class _Response(BaseModel):
 
 
 if __name__ == "__main__":
+    initialize_text_to_text_model()
     print(generate_overview())
