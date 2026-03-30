@@ -28,6 +28,23 @@ def test_get_image(tmp_path: Path, mocker: MockerFixture) -> None:
     assert image_response.content == setup.npc_image
 
 
+def test_post_travel_returns_null_message(
+    tmp_path: Path, mocker: MockerFixture
+) -> None:
+    with setup_app(tmp_path, mocker) as setup:
+        setup.text_to_text_model_responses[r"Evaluate the following input"] = (
+            '{"reasoning": "Alice is a valid character", "is_character_name": true, "refers_to_known_character": null}'
+        )
+
+        travel_response = setup.client.post(
+            "/travel",
+            headers={"x-session-token": setup.token},
+            json={"npc": "Alice"},
+        )
+
+    assert travel_response.status_code == 200
+
+
 def test_post_talk_returns_message(tmp_path: Path, mocker: MockerFixture) -> None:
     with setup_app(tmp_path, mocker) as setup:
         setup.text_to_text_model_responses[r"Evaluate"] = (
