@@ -69,10 +69,10 @@ def mock_for_text_to_text_model(
     mocker.patch.object(text_to_text_model, "Groq", return_value=fake_groq)
 
 
-def mock_for_image_model(mocker):
+def mock_for_image_model(mocker, image: bytes):
     fake_openai = mocker.Mock()
     fake_openai.images.generate.return_value = mocker.Mock(
-        data=[mocker.Mock(b64_json=base64.b64encode(b"fake-image").decode())]
+        data=[mocker.Mock(b64_json=base64.b64encode(image).decode())]
     )
     mocker.patch.object(image_model, "OpenAI", return_value=fake_openai)
 
