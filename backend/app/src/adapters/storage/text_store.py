@@ -1,26 +1,18 @@
 """Caching of strings"""
 
-import os
-from pathlib import Path
+from src.adapters.cache.cache_path_provider import get_cache_path
 
 
 def write_text(key: str, value: str) -> None:
     """Sets the value for the cache key"""
 
-    file_path = Path(os.path.join(_cache_dir, f"{key}"))
-    file_path.parent.mkdir(parents=True, exist_ok=True)
-    file_path.write_text(value)
+    get_cache_path(key).write_text(value)
 
 
 def read_text(key: str) -> str | None:
     """Retrieves the value for the cache key if it exists or None otherwise"""
 
     try:
-        with open(os.path.join(_cache_dir, f"{key}"), "r") as file:
-            return file.read()
+        get_cache_path(key).read_text()
     except FileNotFoundError:
         return None
-
-
-_module_dir = os.path.dirname(__file__)
-_cache_dir = os.path.join(_module_dir, ".cache")
