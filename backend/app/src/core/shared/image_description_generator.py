@@ -21,8 +21,3 @@ $npc must be stationary and not moving.
 The description must not mention any other character besides $npc.
 Respond only with the description and do not include an introductory sentence.
 """
-
-if __name__ == "__main__":
-    while True:
-        npc = input("NPC: ")
-        print(generate_image_description(npc))

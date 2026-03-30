@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from src.adapters.ai.text_to_text_model import initialize_text_to_text_model
 from src.adapters.config.config_loader import load_config
 from src.adapters.ai.image_model import initialize_image_model
+from src.core.shared.novel_excerpts_retriever import initialize_novel_excerpts_retriever
 from .start_router import start_router
 from .image_router import image_router
 from .talk_router import talk_router
@@ -18,6 +19,7 @@ async def lifespan(app: FastAPI):
     load_config()
     initialize_image_model()
     initialize_text_to_text_model()
+    initialize_novel_excerpts_retriever()
     yield
 
 
