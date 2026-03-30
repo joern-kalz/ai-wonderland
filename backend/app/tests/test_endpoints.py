@@ -28,11 +28,29 @@ def test_get_image(tmp_path: Path, mocker: MockerFixture) -> None:
     assert image_response.content == setup.npc_image
 
 
+def test_post_talk_returns_message(tmp_path: Path, mocker: MockerFixture) -> None:
+    with setup_app(tmp_path, mocker) as setup:
+        setup.text_to_text_model_responses[r"Evaluate"] = (
+            '{"success": false, "reason": "The player has not completed the quest yet."}'
+        )
+        setup.text_to_text_model_responses[r"Hello"] = "Hello, traveler."
+
+        talk_response = setup.client.post(
+            "/talk",
+            headers={"x-session-token": setup.token},
+            json={"message": "Hello"},
+        )
+
+    assert talk_response.status_code == 200
+    assert talk_response.json()["message"] == "Hello, traveler."
+
+
 @dataclass
 class SetupAppResult:
     client: TestClient
     token: str
     npc_image: bytes
+    text_to_text_model_responses: dict[str, str]
 
 
 @contextmanager
@@ -60,7 +78,15 @@ def setup_app(
         assert response.status_code == 200
         token = response.json()["session_token"].strip()
         assert token != ""
-        yield SetupAppResult(client=client, token=token, npc_image=npc_image)
+
+        responses.clear()
+
+        yield SetupAppResult(
+            client=client,
+            token=token,
+            npc_image=npc_image,
+            text_to_text_model_responses=responses,
+        )
 
 
 @pytest.fixture(autouse=True)

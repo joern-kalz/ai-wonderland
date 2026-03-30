@@ -48,14 +48,12 @@ def mock_for_text_to_text_model(
     mocker,
     responses: dict[str, str],
 ):
-    compiled = [(re.compile(pattern), value) for pattern, value in responses.items()]
-
     def create_side_effect(*_, **kwargs):
         messages = kwargs.get("messages") or []
         prompt = messages[-1]["content"]
 
-        for regex, value in compiled:
-            if regex.search(prompt):
+        for regex, value in responses.items():
+            if re.compile(regex).search(prompt):
                 return mocker.Mock(
                     choices=[
                         mocker.Mock(message=mocker.Mock(content=value, tool_calls=[]))
