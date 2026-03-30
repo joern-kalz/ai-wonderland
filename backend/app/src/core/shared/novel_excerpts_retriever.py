@@ -23,10 +23,10 @@ def get_novel_excerpts_for_keyword(keyword: str, limit: int) -> list[str]:
 
 _KEY = "novel_alices_adventures_in_wonderland"
 _NOVEL_URL = "https://www.gutenberg.org/cache/epub/11/pg11.txt"
-_text = read_from_cache(_KEY)
+_text = read_from_cache(f"{_KEY}.txt")
 
 if _text == None:
     _text = download_text(_NOVEL_URL)
-    write_to_cache(_KEY, _text)
+    write_to_cache(f"{_KEY}.txt", _text)
 
 create_retriever(retriever_name=_KEY, text=_text)
