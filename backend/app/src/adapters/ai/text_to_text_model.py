@@ -1,6 +1,5 @@
 import os
 from groq import Groq, omit
-from dotenv import load_dotenv
 
 from src.model.chat_message import AssistantChatMessage, ChatMessage, ToolCall
 from src.model.tool import ToolSpec
@@ -9,8 +8,13 @@ import re
 import random
 import string
 
-load_dotenv()
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+_client: Groq | None = None
+
+
+def initialize_text_to_text_model() -> None:
+    """Initialize the text-to-text client."""
+    global _client
+    _client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 
 def invoke_text_to_text_model(
@@ -20,8 +24,11 @@ def invoke_text_to_text_model(
     allow_tool_calls: bool = True,
     json_response: bool = False,
 ) -> AssistantChatMessage:
+    if _client is None:
+        raise RuntimeError("Call initialize_text_to_text_model() before use.")
+
     try:
-        response = client.chat.completions.create(
+        response = _client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=_map_messages_from_model(messages),
             tools=(

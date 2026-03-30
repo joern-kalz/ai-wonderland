@@ -2,6 +2,7 @@
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from src.adapters.ai.text_to_text_model import initialize_text_to_text_model
 from src.adapters.config.config_loader import load_config
 from src.adapters.ai.image_model import initialize_image_model
 from .start import start_router
@@ -16,6 +17,7 @@ async def lifespan(app: FastAPI):
     """Application lifespan context for initialization."""
     load_config()
     initialize_image_model()
+    initialize_text_to_text_model()
     yield
 
 
