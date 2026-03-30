@@ -1,6 +1,8 @@
 import json
 from string import Template
 
+from pydantic import BaseModel
+
 
 from src.adapters.ai.text_to_text_model import invoke_text_to_text_model
 from src.core.use_cases.talk.talk_use_case_model import EvaluationResult
@@ -27,12 +29,8 @@ def evaluate_current_quest(session: GameSession) -> EvaluationResult:
     messages: list[ChatMessage] = [UserChatMessage(role="user", content=prompt)]
     raw_response = invoke_text_to_text_model(messages=messages, json_response=True)
     messages += [raw_response]
-
-    response = json.loads(raw_response.content)
-    success = response["success"] == True or (
-        isinstance(response["success"], str) and response["success"].lower() == "true"
-    )
-    return EvaluationResult(success=success, log=messages)
+    response = _Response.model_validate(json.loads(raw_response.content))
+    return EvaluationResult(success=response.success, log=messages)
 
 
 _evaluation_prompt = """
@@ -56,3 +54,10 @@ Respond ONLY with valid JSON in the following format:
     "success": "boolean (true if the player has succeeded on the task)"
 }
 """
+
+
+class _Response(BaseModel):
+    """The response from the LLM."""
+
+    success: bool
+    reason: str
