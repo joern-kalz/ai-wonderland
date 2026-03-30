@@ -5,10 +5,10 @@ from fastapi import FastAPI
 from src.adapters.ai.text_to_text_model import initialize_text_to_text_model
 from src.adapters.config.config_loader import load_config
 from src.adapters.ai.image_model import initialize_image_model
-from .start import start_router
-from .image import image_router
-from .talk import talk_router
-from .travel import travel_router
+from .start_router import start_router
+from .image_router import image_router
+from .talk_router import talk_router
+from .travel_router import travel_router
 from fastapi.middleware.cors import CORSMiddleware
 
 
