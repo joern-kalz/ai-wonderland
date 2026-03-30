@@ -2,7 +2,7 @@
 
 import json
 from dataclasses import asdict
-from src.adapters.cache.cache_path_provider import get_cache_path
+from src.adapters.cache.cache_provider import get_cache_path
 from src.model.chat_message import (
     ChatMessage,
     SystemChatMessage,

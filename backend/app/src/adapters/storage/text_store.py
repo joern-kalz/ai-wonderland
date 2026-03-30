@@ -1,6 +1,6 @@
 """Caching of strings"""
 
-from src.adapters.cache.cache_path_provider import get_cache_path
+from src.adapters.cache.cache_provider import get_cache_path
 
 
 def write_text(key: str, value: str) -> None:

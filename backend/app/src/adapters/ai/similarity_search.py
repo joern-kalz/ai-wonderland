@@ -4,7 +4,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 
-from src.adapters.cache.cache_path_provider import get_cache_path
+from src.adapters.cache.cache_provider import get_cache_path
 
 
 def create_retriever(
