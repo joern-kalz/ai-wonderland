@@ -1,7 +1,6 @@
 import json
 from string import Template
 
-from pydantic import BaseModel
 
 from src.adapters.ai.text_to_text_model import invoke_text_to_text_model
 from src.core.use_cases.talk.talk_use_case_model import EvaluationResult
@@ -53,14 +52,7 @@ $chat
 Respond ONLY with valid JSON in the following format:
 
 {
-    "success": "boolean (true if the player has succeeded on the task)",
-    "reason": "brief explanation of the evaluation"
+    "reason": "brief explanation of the evaluation",
+    "success": "boolean (true if the player has succeeded on the task)"
 }
 """
-
-
-class _Response(BaseModel):
-    """The response from the LLM."""
-
-    success: bool
-    reason: str
