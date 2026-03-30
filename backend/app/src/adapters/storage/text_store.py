@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 
-def write_to_cache(key: str, value: str) -> None:
+def write_text(key: str, value: str) -> None:
     """Sets the value for the cache key"""
 
     file_path = Path(os.path.join(_cache_dir, f"{key}"))
@@ -12,7 +12,7 @@ def write_to_cache(key: str, value: str) -> None:
     file_path.write_text(value)
 
 
-def read_from_cache(key: str) -> str | None:
+def read_text(key: str) -> str | None:
     """Retrieves the value for the cache key if it exists or None otherwise"""
 
     try:
