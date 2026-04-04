@@ -7,7 +7,7 @@ flowchart LR
     subgraph a ["`**Agent Loop**`"]
     direction TB
     L1("`**LLM** <br> LLM answers acting as NPC or calls info tool`")
-    R("`**Vector Store** <br> Vector store retrieves text chunks related to *question*`")
+    R("`**Vector Store** <br> Retrieves text chunks related to *question*`")
     end
     L2("`**LLM** <br> LLM evaluates dialogue if current quest accomplished`")
     P2("`**Player** <br> Player receives NPC dialogue line`")
@@ -17,4 +17,6 @@ flowchart LR
     R -->|"`novel excerpts <br> related to *question*`"| L1
     a -->|"`NPC <br> dialoge line`"| P2
 ```
-        
+ 
+pnpm run dev
+uv run fastapi de<v src/local_main.py 
