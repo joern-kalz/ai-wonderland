@@ -68,3 +68,28 @@ class _Response(BaseModel):
 if __name__ == "__main__":
     initialize_text_to_text_model()
     print(generate_overview())
+
+
+_response_format = {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Wonderland Crisis Schema",
+    "description": "A schema defining the existential narrative and progression for a game set in Wonderland.",
+    "type": "object",
+    "properties": {
+        "crisis": {
+            "type": "string",
+            "description": "Description of an existential crisis in the world of Wonderland",
+        },
+        "introduction_npc": {
+            "type": "string",
+            "description": "The NPC at the start of the game",
+        },
+        "quests_to_resolve_crisis": {
+            "type": "array",
+            "description": "Quests the player must complete to resolve the crisis",
+            "items": {"type": "string"},
+            "minItems": 1,
+        },
+    },
+    "required": ["crisis", "introduction_npc", "quests_to_resolve_crisis"],
+}
