@@ -11,7 +11,8 @@ _s3 = boto3.client("s3")
 
 def read_text(filename: str) -> str | None:
     """Reads text from S3. Returns None if object not found."""
-    return read_bytes(filename).decode("utf-8")
+    bytes_data = read_bytes(filename)
+    return bytes_data.decode("utf-8") if bytes_data is not None else None
 
 
 def write_text(filename: str, value: str) -> None:
