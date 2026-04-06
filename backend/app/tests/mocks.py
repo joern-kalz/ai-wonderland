@@ -38,7 +38,7 @@ def mock_for_similarity_search(mocker):
     )
 
     fake_vector_store = mocker.Mock()
-    fake_vector_store.save_local.return_value = None
+    fake_vector_store.serialize_to_bytes.return_value = b"vector store bytes"
     fake_faiss = mocker.Mock()
     fake_faiss.from_documents.return_value = fake_vector_store
     mocker.patch.object(similarity_search, "FAISS", fake_faiss)

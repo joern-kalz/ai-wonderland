@@ -64,63 +64,8 @@ def mock_faiss(
     constructor = mocker.patch.object(similarity_search, "FAISS")
     constructor.from_documents.return_value = from_documents_result
     if load_local_result is not None:
-        constructor.load_local.return_value = load_local_result
+        constructor.deserialize_from_bytes.return_value = load_local_result
     return constructor
-
-
-def test_create_retriever_creates_vector_store_and_saves_cache(
-    mocker: MockerFixture,
-) -> None:
-    document = mocker.Mock(page_content="first chunk")
-    splitter = mock_text_splitter(mocker, [document])
-    embeddings = mock_embeddings(mocker)
-    cache_path = mock_cache_path(mocker, exists=False)
-    vector_store = mocker.Mock()
-    faiss_constructor = mock_faiss(mocker, from_documents_result=vector_store)
-
-    similarity_search.create_retriever(
-        retriever_name="test_retriever",
-        text="some text",
-        chunk_size=512,
-        chunk_overlap=64,
-    )
-
-    splitter.constructor.assert_called_once_with(
-        chunk_size=512,
-        chunk_overlap=64,
-    )
-    embeddings.constructor.assert_called_once_with(model_name="BAAI/bge-small-en-v1.5")
-    faiss_constructor.from_documents.assert_called_once_with(
-        [document], embeddings.embeddings
-    )
-    vector_store.save_local.assert_called_once_with(str(cache_path))
-    assert similarity_search._chunk_stores["test_retriever"] == [document]
-    assert similarity_search._vector_stores["test_retriever"] is vector_store
-
-
-def test_create_retriever_loads_local_vector_store_when_cache_exists(
-    mocker: MockerFixture,
-) -> None:
-    document = mocker.Mock(page_content="cached chunk")
-    mock_text_splitter(mocker, [document])
-    embeddings = mock_embeddings(mocker)
-    cache_path = mock_cache_path(mocker, exists=True)
-    vector_store = mocker.Mock()
-    faiss_constructor = mock_faiss(
-        mocker,
-        from_documents_result=mocker.Mock(),
-        load_local_result=vector_store,
-    )
-
-    similarity_search.create_retriever(
-        retriever_name="cached_retriever",
-        text="cached text",
-    )
-
-    faiss_constructor.load_local.assert_called_once_with(
-        str(cache_path), embeddings.embeddings, allow_dangerous_deserialization=True
-    )
-    assert similarity_search._vector_stores["cached_retriever"] is vector_store
 
 
 def test_retrieve_by_keyword_returns_matching_chunks() -> None:

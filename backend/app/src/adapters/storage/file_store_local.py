@@ -16,9 +16,12 @@ def write_text(filename: str, value: str) -> None:
     get_cache_path(filename).write_text(value)
 
 
-def read_bytes(filename: str) -> bytes:
+def read_bytes(filename: str) -> bytes | None:
     """Reads bytes from local cache file."""
-    return get_cache_path(filename).read_bytes()
+    try:
+        return get_cache_path(filename).read_bytes()
+    except FileNotFoundError:
+        return None
 
 
 def write_bytes(filename: str, value: bytes) -> None:
