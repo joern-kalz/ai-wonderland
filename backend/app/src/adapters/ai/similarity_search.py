@@ -5,6 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 
 from src.adapters.cache.cache_provider import get_cache_path
+from src.adapters.storage.file_store import read_bytes, write_bytes
 
 
 def create_retriever(
@@ -20,18 +21,18 @@ def create_retriever(
     )
     _chunk_stores[retriever_name] = _text_splitter.create_documents([text])
     embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
-    cache = get_cache_path(retriever_name)
+    cache = read_bytes(retriever_name)
 
-    if cache.exists():
-        _vector_stores[retriever_name] = FAISS.load_local(
-            str(cache), embeddings, allow_dangerous_deserialization=True
+    if cache is not None:
+        _vector_stores[retriever_name] = FAISS.deserialize_from_bytes(
+            cache, embeddings, allow_dangerous_deserialization=True
         )
     else:
         print("Creating vector store. This can take a few seconds...")
         _vector_stores[retriever_name] = FAISS.from_documents(
             _chunk_stores[retriever_name], embeddings
         )
-        _vector_stores[retriever_name].save_local(str(cache))
+        write_bytes(retriever_name, _vector_stores[retriever_name].serialize_to_bytes())
         print("Vector store created.")
 
 
