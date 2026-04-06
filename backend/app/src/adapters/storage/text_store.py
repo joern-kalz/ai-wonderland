@@ -1,18 +1,15 @@
 """Caching of strings"""
 
-from src.adapters.cache.cache_provider import get_cache_path
+from src.adapters.storage import file_store
 
 
 def write_text(key: str, value: str) -> None:
     """Sets the value for the cache key"""
 
-    get_cache_path(key).write_text(value)
+    file_store.write_text(key, value)
 
 
 def read_text(key: str) -> str | None:
     """Retrieves the value for the cache key if it exists or None otherwise"""
 
-    try:
-        get_cache_path(key).read_text()
-    except FileNotFoundError:
-        return None
+    return file_store.read_text(key)
