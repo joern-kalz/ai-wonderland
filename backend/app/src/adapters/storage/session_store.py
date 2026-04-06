@@ -23,8 +23,7 @@ def read_session(session_token: str) -> GameSession | None:
     if not json_path.exists():
         return None
 
-    with open(json_path, "r") as f:
-        session_dict = json.load(f)
+    session_dict = json.loads(json_path.read_text())
 
     for npc_name, npc_dict in session_dict["npcs_by_name"].items():
         image_path = get_cache_path(f"{session_token}_{npc_name}.png")
@@ -50,8 +49,9 @@ def write_session(session_token: str, session: GameSession) -> None:
         image = npc_dict.pop("image")
         get_cache_path(f"{session_token}_{npc_name}.png").write_bytes(image)
 
-    with open(get_cache_path(f"{session_token}.json"), "w") as f:
-        json.dump(session_dict, f, indent=2)
+    get_cache_path(f"{session_token}.json").write_text(
+        json.dumps(session_dict, indent=2)
+    )
 
 
 def deserialize_chat_message(data: dict) -> ChatMessage:
