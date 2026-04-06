@@ -18,7 +18,7 @@ def write_text(filename: str, value: str) -> None:
         file_store_local.write_text(filename, value)
 
 
-def read_bytes(filename: str) -> bytes:
+def read_bytes(filename: str) -> bytes | None:
     """Reads bytes from storage (S3 or local based on environment)."""
     if is_on_aws():
         return file_store_aws.read_bytes(filename)

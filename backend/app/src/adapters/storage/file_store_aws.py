@@ -19,7 +19,7 @@ def write_text(filename: str, value: str) -> None:
     write_bytes(filename, value.encode("utf-8"))
 
 
-def read_bytes(filename: str) -> bytes:
+def read_bytes(filename: str) -> bytes | None:
     """Reads bytes from S3."""
     try:
         return _s3.get_object(Bucket=_s3_bucket, Key=filename)["Body"].read()
