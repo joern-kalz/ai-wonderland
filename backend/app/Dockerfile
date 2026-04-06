@@ -12,6 +12,6 @@ FROM public.ecr.aws/lambda/python:3.12
 
 COPY --from=builder /packages ${LAMBDA_RUNTIME_DIR}
 
-COPY src/ ${LAMBDA_TASK_ROOT}
+COPY src/ ${LAMBDA_TASK_ROOT}/src/
 
-CMD [ "lambda_main.handler" ]
+CMD [ "src.lambda_main.handler" ]
