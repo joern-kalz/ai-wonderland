@@ -5,6 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 
 from src.adapters.cache.cache_provider import get_cache_path
+from src.adapters.config.global_config_provider import is_on_aws
 from src.adapters.storage.file_store import read_bytes, write_bytes
 
 
@@ -20,6 +21,10 @@ def create_retriever(
         chunk_size=chunk_size, chunk_overlap=chunk_overlap
     )
     _chunk_stores[retriever_name] = _text_splitter.create_documents([text])
+
+    if is_on_aws():
+        return
+
     embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
     cache = read_bytes(retriever_name)
 
