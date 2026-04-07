@@ -1,5 +1,5 @@
 import os
-from groq import Groq, omit
+from groq import APIStatusError, Groq, omit
 
 from src.model.chat_message import AssistantChatMessage, ChatMessage, ToolCall
 from src.model.tool import ToolSpec
@@ -55,6 +55,10 @@ def invoke_text_to_text_model(
         print("Model attempted to call a tool but there was an error: ", e.message)
         content = ""
         tool_calls = [_create_tool_call(match.group(1), match.group(2))]
+    except APIStatusError as e:
+        print(f"Status code: {e.status_code}")
+        print(f"Response: {e.response.json()}")
+        raise
 
     return AssistantChatMessage(
         role="assistant", content=content, tool_calls=tool_calls
