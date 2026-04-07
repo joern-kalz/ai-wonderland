@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "frontend/app"
+		},
+		{
+			"path": "frontend/infra"
 		}
 	],
 	"settings": {}
