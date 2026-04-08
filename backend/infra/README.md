@@ -1,58 +1,31 @@
+# AWS Deployment Guide
 
-# Welcome to your CDK Python project!
+This document outlines the steps to deploy the backend to AWS.
 
-This is a blank project for CDK development with Python.
+## Prerequisites
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+- Install [uv](https://github.com/astral-sh/uv)
+- Create an API from Groq [here](https://console.groq.com/)
+- Create an API from OpenAI [here](https://platform.openai.com/login?next=%2Fsettings%2Forganization%2Fapi-keys)
+- Install [Docker](https://www.docker.com/get-started/)
+- Install the [AWS Cloud Development Kit (CDK)](https://docs.aws.amazon.com/cdk/v2/guide/home.html)
+- Setup security credentials for CDK, e.g. by installing [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and running `aws login`
 
-This project is set up like a standard Python project.  The initialization
-process also creates a virtualenv within this project, stored under the `.venv`
-directory.  To create the virtualenv it assumes that there is a `python3`
-(or `python` for Windows) executable in your path with access to the `venv`
-package. If for any reason the automatic creation of the virtualenv fails,
-you can create the virtualenv manually.
+## Install dependencies
 
-To manually create a virtualenv on MacOS and Linux:
+Install dependencies with:
 
-```
-$ python3 -m venv .venv
-```
-
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
-
-```
-$ source .venv/bin/activate
+```bash
+uv sync
 ```
 
-If you are a Windows platform, you would activate the virtualenv like this:
+## Deployment
 
-```
-% .venv\Scripts\activate.bat
-```
+Deploy to an AWS account with:
 
-Once the virtualenv is activated, you can install the required dependencies.
-
-```
-$ pip install -r requirements.txt
+```bash
+uv run cdk deploy
 ```
 
-At this point you can now synthesize the CloudFormation template for this code.
-
-```
-$ cdk synth
-```
-
-To add additional dependencies, for example other CDK libraries, just add
-them to your `requirements.txt` file and rerun the `python -m pip install -r requirements.txt`
-command.
-
-## Useful commands
-
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
-
-Enjoy!
+Navigate to Secret Manager in the AWS console and enter the API keys 
+created earlier for GroqApiKeySecret and OpenAiApiKeySecret.
