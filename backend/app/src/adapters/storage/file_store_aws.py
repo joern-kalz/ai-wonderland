@@ -4,9 +4,13 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 
+from src.adapters.config.global_config_provider import is_on_aws
+
 
 _s3_bucket = os.environ.get("S3_BUCKET")
-_s3 = boto3.client("s3")
+
+if is_on_aws():
+    _s3 = boto3.client("s3")
 
 
 def read_text(filename: str) -> str | None:
