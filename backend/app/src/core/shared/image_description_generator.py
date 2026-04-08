@@ -4,7 +4,7 @@ from src.adapters.ai.text_to_text_model import initialize_text_to_text_model
 from src.core.shared.ai_agent import invoke_agent
 from src.core.shared.novel_excerpts_retriever import initialize_novel_excerpts_retriever
 from src.model.chat_message import ChatMessage, UserChatMessage
-from src.core.shared.novel_excerpts_tool_provider import novel_excerpts_tools
+from src.core.shared.novel_excerpts_tool_provider import get_novel_excerpts_tools
 
 
 def generate_image_description(npc: str) -> list[ChatMessage]:
@@ -12,7 +12,7 @@ def generate_image_description(npc: str) -> list[ChatMessage]:
     prompt = template.substitute(npc=npc)
     return invoke_agent(
         messages=[UserChatMessage(role="user", content=prompt)],
-        tools=novel_excerpts_tools,
+        tools=get_novel_excerpts_tools(),
         max_iterations=3,
     )
 

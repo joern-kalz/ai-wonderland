@@ -6,7 +6,7 @@ from string import Template
 from src.core.shared.ai_agent import invoke_agent
 from src.core.use_cases.talk.talk_use_case_model import NpcResponse
 from src.model.chat_message import SystemChatMessage
-from src.core.shared.novel_excerpts_tool_provider import novel_excerpts_tools
+from src.core.shared.novel_excerpts_tool_provider import get_novel_excerpts_tools
 from src.model.game_session import GameSession
 
 
@@ -29,7 +29,7 @@ def generate_response(session: GameSession) -> NpcResponse:
 
     response = invoke_agent(
         messages=[system_message] + npc.chat_history,
-        tools=novel_excerpts_tools,
+        tools=get_novel_excerpts_tools(),
         max_iterations=2,
     )
 
