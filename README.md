@@ -30,7 +30,8 @@ flowchart LR
     a -->|"`NPC <br> dialoge line`"| P2
 ```
 
-For a deeper dive into the agent architecture and game mechanics, check out my Medium article.
+For a deeper dive into the agent architecture and game mechanics, check out my 
+[Medium article](https://medium.com/@joern.kalz/using-ai-to-create-an-adventure-game-on-the-fly-f9c60767aaa4).
 
 ## Development Setup
 
