@@ -60,7 +60,7 @@ uv sync
 uv run fastapi dev src/local_main.py
 ```
 
-## Frontend Setup
+### Running the Frontend
 
 Start the Next.js development server
 
